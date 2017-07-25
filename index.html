@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Giphy Search</title>
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+  <h1>What kind of Gifs do you want?</h1>
+  <form id="gif-form">
+    <input id="gif-entry" type="text"/>
+    <button id="gif-submit" type="submit">Submit</button>
+  </form>
+  <div class="gif-output">
+    <ul id="gif-list" class="gif-list">
+        
+    </ul>
+  </div>
+  <script>
+  $( document ).ready(function() {
+    
+    // 
+    $('#gif-submit').on('click', function(event) {
+        event.preventDefault();
+        // set a variable for search term
+        var searchTerm = $('#gif-entry').val();
+        // Ajax Settings
+        var apiKey = "de2a630887f841daa7108fc41b93e1c0";
+        var protocol = "https://";
+        var domain = "api.giphy.com";
+        var path = "/v1/gifs/search";
+        // Build Url
+        var url = protocol + domain + path + "?" + "q=" + searchTerm + "&api_key=" + apiKey;
+        // Test 
+        console.log(url);
+        // Ajax Call
+        $.ajax({
+          url: url,
+          method: "GET"
+        }).done(function(response) {
+          
+            // Print out Gifs!
+            appendGifs(response);
+ 
+        });
+        
+    });
+    function appendGifs(response) {
+        var gifs = response.data; // array of gifs
+        for(var i=0; i < gifs.length; i++) {
+          var img = gifs[i].images.preview_gif.url;
+          // List them on the page
+             $("#gif-list").append("<li><img src='" + img + "'></img></li>");
+         }
+    }
+  });
+  </script>
+</body>
+</html>
