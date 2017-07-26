@@ -1,61 +1,82 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Giphy Search</title>
-    <script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  <title>Giphy Search</title>
+  <script
+  src="http://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
 </head>
+
 <body>
-  <h1>What kind of Gifs do you want?</h1>
+  <h1>Enter your address to see how much it's worth!</h1>
   <form id="gif-form">
-    <input id="gif-entry" type="text"/>
+    <input id="house-number" type="text" placeholder="House Number">
+    <br>
+    <input id="street-number" type="text" placeholder="Street Name">
+    <br>
+    <input id="street-type" type="text" placeholder="Ave, St, Ln, etc.">
+    <br>
+    <input id="city" type="text" placeholder="City">
+    <br>
+    <input id="state" type="text" placeholder="State">
+    <br>
     <button id="gif-submit" type="submit">Submit</button>
   </form>
   <div class="gif-output">
     <ul id="gif-list" class="gif-list">
-        
     </ul>
   </div>
   <script>
-  $( document ).ready(function() {
-    
-    // 
-    $('#gif-submit').on('click', function(event) {
-        event.preventDefault();
-        // set a variable for search term
-        var searchTerm = $('#gif-entry').val();
-        // Ajax Settings
-        var apiKey = "de2a630887f841daa7108fc41b93e1c0";
-        var protocol = "https://";
-        var domain = "api.giphy.com";
-        var path = "/v1/gifs/search";
-        // Build Url
-        var url = protocol + domain + path + "?" + "q=" + searchTerm + "&api_key=" + apiKey;
-        // Test 
-        console.log(url);
-        // Ajax Call
-        $.ajax({
-          url: url,
-          method: "GET"
-        }).done(function(response) {
-          
-            // Print out Gifs!
-            appendGifs(response);
- 
-        });
-        
+
+  $(document).ready(function() {
+    console.log("linked")
+    $("#gif-submit").on("click", function(event) {
+      console.log("something");
+      event.preventDefault();
+      // set a variable for search term
+      // Ajax Settings
+      var apiKey = "X1-ZWz1fx0iwsdqtn_aovt1";
+      var protocol = "http://";
+      var domain = "www.zillow.com";
+      var path = "/webservice/GetDeepSearchResults.htm";
+      var houseNumber = $("#house-number").val();
+      var streetName = $("#street-number").val();
+      var streetType = $("#street-type").val();
+      var address = (houseNumber + "%20" + streetName + "%20" + streetType);
+      var city = $("#city").val();
+      var state = $("#state").val();
+      var citystatezip = (city + "%2%20" + state);
+
+
+      // Build Url
+      var url = protocol + domain + path + "?" + "zws-id=" + apiKey + "&address=" + address + "&citystatezip=" + citystatezip;
+      // Test 
+      console.log(url);
+      // Ajax Call
+      $.ajax({
+        url: url,
+        method: "GET"
+      }).done(function(response) {
+
+        // Print out Gifs!
+        appendZ(response);
+
+      });
+
     });
-    function appendGifs(response) {
-        var gifs = response.data; // array of gifs
-        for(var i=0; i < gifs.length; i++) {
-          var img = gifs[i].images.preview_gif.url;
-          // List them on the page
-             $("#gif-list").append("<li><img src='" + img + "'></img></li>");
-         }
+
+    function appendZ(response) {
+      var zillow= response.data; // array of gifs
+      var sqft = zillow.results.result.address.finishedSqFt;
+      // List them on the page
+      console.log(sqft)
+      $("#gif-list").append("<li>" + sqft + " square feet</li>");
     }
   });
+
   </script>
 </body>
+
 </html>
